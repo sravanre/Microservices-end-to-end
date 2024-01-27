@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
     CR_PAT = credentials('github-token')
+    /// add the sonar here , *****sravan***
     }
 
     stages {
