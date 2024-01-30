@@ -1,8 +1,14 @@
 pipeline {
     agent any
+
+
     environment {
-    CR_PAT = credentials('github-token')
-    /// add the sonar here , *****sravan***
+        // CR_PAT = credentials('github-token')
+        // add the sonar here , *****sravan***
+        DOCKER_REGISTRY_CREDENTIALS = credentials('docker-creds')
+        SCANNER_HOME=tool 'sonar-scanner'
+
+
     }
 
     stages {
@@ -16,22 +22,28 @@ pipeline {
 
          stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/sravanre/microservices-demo.git'
+                git branch: 'jenkins', url: 'https://github.com/sravanre/microservices-end-to-end.git'
             }
         }
-        // stage('Prepare for the docker login'){
-        //     steps{
-        //         sh """
-        //         sudo docker login ghcr.io -u sravanre -p ${CR_PAT}
-        //         """
-        //     }
-        // }
+        stage('Prepare for the docker login'){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                       sh """
+                       docker login ghcr.io -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+                       """
+                       }
+                }
+                
+            }
+        }
         stage('Build and tag Adservice microservice') {
             steps {
                 // Use Maven to build your microservices
                 sh """
                 cd src/adservice
                 docker build -t ghcr.io/sravanre/adservice:v1 .
+                
                 """
             }
         }
@@ -48,18 +60,17 @@ pipeline {
         stage("Sonarqube Analysis "){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
-                    -Dsonar.projectKey=Netflix '''
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
                 }
             }
         }
-        stage("quality gate"){
-           steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
-                }
-            } 
-        }
+        // stage("quality gate"){
+        //    steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+        //         }
+        //     } 
+        // }
         
 
         // stage('Test') {
@@ -82,7 +93,7 @@ pipeline {
                 // Add deployment steps based on your deployment strategy
                 echo "done deployment"
             }
-        }
+        }   
     }
 
     post {
