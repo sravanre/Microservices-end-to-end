@@ -28,7 +28,7 @@ pipeline {
         stage('Prepare for the docker login'){
             steps{
                 script{
-                    withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-creds', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                        sh """
                        docker login ghcr.io -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                        """
