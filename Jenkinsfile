@@ -44,8 +44,7 @@ pipeline {
                 sh """
                 cd src/adservice
                 docker build -t ghcr.io/sravanre/adservice:V${env.BUILD_NUMBER} .
-                // docker.build("${DOCKER_REGISTRY_URL}/adservice:${env.BUILD_NUMBER}", "-f ${DOCKERFILE_PATH}")
-                docker push 
+                docker push ghcr.io/sravanre/adservice:V${env.BUILD_NUMBER}
                 """
             }
         }
