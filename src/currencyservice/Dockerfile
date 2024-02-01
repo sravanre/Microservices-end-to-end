@@ -13,8 +13,10 @@
 # limitations under the License.
 
 FROM node:20.11.0-alpine@sha256:8e6a472eb9742f4f486ca9ef13321b7fc2e54f2f60814f339eeda2aff3037573 as base
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 
 FROM base as builder
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 
 # Some packages (e.g. @google-cloud/profiler) require additional
 # deps for post-install scripts
