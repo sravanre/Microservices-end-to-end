@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM eclipse-temurin:21@sha256:f6a4ab7916848d0ba4cc77d690f00f81fd3aab3ef14bc3bdf23d6385eee20a14 as builder
-
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 WORKDIR /app
 
 COPY ["build.gradle", "gradlew", "./"]

@@ -7,6 +7,7 @@ pipeline {
         // add the sonar here , *****sravan***
         DOCKER_REGISTRY_CREDENTIALS = credentials('docker-creds')
         SCANNER_HOME=tool 'sonar-scanner'
+        DOCKER_REGISTRY_URL = "ghcr.io"
 
 
     }
@@ -42,8 +43,9 @@ pipeline {
                 // Use Maven to build your microservices
                 sh """
                 cd src/adservice
-                docker build -t ghcr.io/sravanre/adservice:v1 .
-                
+                docker build -t ghcr.io/sravanre/adservice:V${env.BUILD_NUMBER} .
+                // docker.build("${DOCKER_REGISTRY_URL}/adservice:${env.BUILD_NUMBER}", "-f ${DOCKERFILE_PATH}")
+                docker push 
                 """
             }
         }
@@ -52,12 +54,13 @@ pipeline {
                 // Use Maven to build your microservices
                 sh """
                 cd src/cartservice/src
-                docker build -t ghcr.io/sravanre/cartservice:v1 .
+                docker build -t ghcr.io/sravanre/cartservice:V${env.BUILD_NUMBER} .
+                docker push ghcr.io/sravanre/cartservice:V${env.BUILD_NUMBER}
                 """
             }
         }
 
-        stage("Sonarqube Analysis "){
+        stage("Sonarqube Analysis for recommendationservice "){
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
