@@ -215,14 +215,6 @@ pipeline {
             }
         }
 
-        stage("Sonarqube Analysis for recommendationservice "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
-                }
-            }
-        }
-
         stage("Sonarqube Analysis for shippingservice "){
             steps{
                 withSonarQubeEnv('sonar-server') {
@@ -232,7 +224,7 @@ pipeline {
         }
 
 
-        
+
         // stage("quality gate"){
         //    steps {
         //         script {
