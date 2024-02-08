@@ -1,0 +1,101 @@
+pipeline {
+    agent any
+
+
+    environment {
+        // CR_PAT = credentials('github-token')
+        // add the sonar here , *****sravan***
+        DOCKER_REGISTRY_CREDENTIALS = credentials('docker-creds')
+        SCANNER_HOME=tool 'sonar-scanner'
+        DOCKER_REGISTRY_URL = "ghcr.io"
+
+
+    }
+
+    stages {
+
+		stage('Checkout from Git'){
+            steps{
+                git branch: 'jenkins', url: 'https://github.com/sravanre/microservices-end-to-end.git'
+            }
+        }
+        
+        stage('Sonarqube Analysis for recommendationservice'){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
+
+                }
+            }
+        }
+
+        // FIXME:  change the path for the src , if it fails again
+        stage("Sonarqube Analysis for cartservice "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                   sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=loadgenerator -Dsonar.sources=./src/loadgenerator/. """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for currencyservice "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=cartscurrencyservice -Dsonar.sources=./src/currencyservice/.  """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for frontend "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=frontend -Dsonar.sources=./src/frontend/.  """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for loadgenerator "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=loadgenerator -Dsonar.sources=./src/loadgenerator/.  """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for paymentservice "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=paymentservice -Dsonar.sources=./src/paymentservice/.  """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for productcatalogservice "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=productcatalogservice -Dsonar.sources=./src/productcatalogservice/.  """
+                }
+            }
+        }
+
+        stage("Sonarqube Analysis for shippingservice "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=shippingservice -Dsonar.sources=./src/shippingservice/.  """
+                }
+            }
+        }
+        
+    }
+
+    post {
+        success {
+            // Perform actions when the build is successful
+            echo 'Build successful!'
+        }
+        failure {
+            // Perform actions when the build fails
+            echo 'Build failed!'
+        }
+    }
+}
