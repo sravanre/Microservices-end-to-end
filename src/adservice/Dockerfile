@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM eclipse-temurin:21@sha256:f6a4ab7916848d0ba4cc77d690f00f81fd3aab3ef14bc3bdf23d6385eee20a14 as builder
-
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 WORKDIR /app
 
 COPY ["build.gradle", "gradlew", "./"]
@@ -26,6 +26,7 @@ RUN chmod +x gradlew
 RUN ./gradlew installDist
 
 FROM eclipse-temurin:21.0.1_12-jre-alpine@sha256:9a21ac97b76e52f4b58d5d6c7fdd459cd600cce8724a31fc0a2b4346b35bced2
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 
 RUN apk add --no-cache ca-certificates
 

@@ -14,6 +14,8 @@
 
 # https://mcr.microsoft.com/product/dotnet/sdk
 FROM mcr.microsoft.com/dotnet/sdk:8.0.101@sha256:7ef41132b2ebe6166bde36b7ba2f0d302e10307c3e0523a4539643a77233f56d as builder
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
+
 WORKDIR /app
 COPY cartservice.csproj .
 RUN dotnet restore cartservice.csproj \
@@ -31,6 +33,7 @@ RUN dotnet publish cartservice.csproj \
 
 # https://mcr.microsoft.com/product/dotnet/runtime-deps
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0.1-alpine3.18-amd64@sha256:0b9be3c3937cd5ce83c6d05fc01698a904537be71b93dd485ea779592d5c8c10
+LABEL org.opencontainers.image.source https://github.com/sravanre/Microservices-end-to-end
 
 WORKDIR /app
 COPY --from=builder /cartservice .
