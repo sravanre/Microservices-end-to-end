@@ -43,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: ghcr.io/sravanre/cartservice-example:v1 
+        image: ghcr.io/sravanre/cartservice:v28
         ports:
         - containerPort: 7070
         env:
