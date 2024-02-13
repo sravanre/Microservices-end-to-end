@@ -1,0 +1,20 @@
+// this file , i wanted to add the path based option in the stages section , dir"" something like
+// this was there when i saw in one of the online resources, read the section #path1.1 in notion 
+// this will do when i get the time 
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'jenkins', url: 'https://github.com/sravanre/microservices-end-to-end.git'
+            }
+        }
+
+        
+
+
+    }
+}
