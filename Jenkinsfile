@@ -158,19 +158,20 @@ pipeline {
             }
         }
 
-
-        stage("Sonarqube Analysis for recommendationservice "){
+        stage('Sonarqube Analysis for recommendationservice'){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
+                sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
+
                 }
             }
         }
+
         // FIXME:  change the path for the src , if it fails again
         stage("Sonarqube Analysis for cartservice "){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=cartservice -Dsonar.sources=./src/cartservice/.  """
+                   sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=loadgenerator -Dsonar.sources=./src/loadgenerator/. """
                 }
             }
         }
@@ -215,14 +216,6 @@ pipeline {
             }
         }
 
-        stage("Sonarqube Analysis for recommendationservice "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh """ $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=recommendationservice -Dsonar.sources=./src/recommendationservice/.  """
-                }
-            }
-        }
-
         stage("Sonarqube Analysis for shippingservice "){
             steps{
                 withSonarQubeEnv('sonar-server') {
@@ -232,7 +225,7 @@ pipeline {
         }
 
 
-        
+
         // stage("quality gate"){
         //    steps {
         //         script {

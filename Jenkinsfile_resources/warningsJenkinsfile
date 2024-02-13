@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'jenkins', url: 'https://github.com/sravanre/microservices-end-to-end.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build your Go project if needed
+                echo "nothing to build "
+            }
+        }
+
+        stage('Linting') {
+            steps {
+                // Run golangci-lint and generate Checkstyle XML report
+                // this is running on the terminal , installed 
+                script {
+                    sh 'golangci-lint run --out-format checkstyle > checkstyle-report.xml'
+                }
+            }
+        }
+
+        stage('Publish Checkstyle Report') {
+            steps {
+                // Publish Checkstyle analysis results in Jenkins using Warnings Next Generation plugin
+                recordIssues tool: [checkStyle(pattern: 'checkstyle-report.xml')]
+            }
+        }
+    }
+}
