@@ -1,0 +1,72 @@
+---
+- name: Jenkins
+  hosts: localhost
+  remote_user: ec2-user
+  become: true
+  
+  tasks:
+
+    - name: install dependencies
+      yum:
+        name: "{{ package }} "
+        state: present
+      vars:
+        package:
+        - wget
+        - git
+        - yum-utils
+
+    - name: install java 11
+      shell: "amazon-linux-extras install java-openjdk11"
+      become: yes
+      ignore_errors: yes
+
+    - name: Download Jenkins Repo
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: Import Jenkins Repo GPG key
+      rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat/jenkins.io-2023.key
+
+    - name: Install Jenkins
+      yum:
+        name: jenkins
+        state: present
+
+    - name: Start and Enable Jenkins
+      systemd:
+        name: jenkins
+        state: started
+        enabled: true
+
+    - name: Sleep for 30 seconds and continue with play
+      wait_for: timeout=30
+
+    - name: Get init password Jenkins
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      changed_when: false
+      register: result
+
+    - name: Print init password Jenkins
+      debug:
+        var: result.stdout
+
+    # - name: Install Docker using Amazon Linux Extras
+    #   shell: "amazon-linux-extras install docker"
+    #   become: yes
+    #   ignore_errors: yes
+
+    - name: Install docker with using the yum module itself 
+    
+    
+
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      become: yes
