@@ -37,7 +37,7 @@
         state: present
 
     - name: Start and Enable Jenkins
-      systemd:
+      systemd:vim 
         name: jenkins
         state: started
         enabled: true
@@ -75,3 +75,34 @@
         enabled: yes
       become: yes
       ignore_errors: yes
+
+# this didn't work , some error of the source regarding, 
+# here is the erro 
+#       TASK [Pull the SonarQube container image] **********************************************************************************************************************************
+#         fatal: [localhost]: FAILED! => {"changed": false, "msg": "state is present but all of the following are missing: source"}       
+
+
+# below is the code 
+    # - name: Pull the SonarQube container image
+    #   docker_image:
+    #     name: sonarqube:lts-community
+    #   become: yes
+
+    # - name: Run SonarQube container
+    #   docker_container:
+    #     name: sonar-webui
+    #     image: sonarqube:lts-community
+    #     ports:
+    #       - "9000:9000"
+    #     state: started
+    #     detach: yes
+    #   become: yes
+
+# running with shell is not the best option . 
+    - name: Run SonarQube container
+      become: true
+      shell: docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+
+
+
+

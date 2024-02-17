@@ -117,6 +117,15 @@ resource "aws_security_group" "ansible_public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  #HTTP
+  ingress {
+    description = "allow traffic from TCP/30100 for the node port"
+    from_port   = 30100
+    to_port     = 30100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   #Outbound internet access
   egress {
     from_port   = 0
