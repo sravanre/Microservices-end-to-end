@@ -37,7 +37,7 @@
         state: present
 
     - name: Start and Enable Jenkins
-      systemd:vim 
+      systemd:
         name: jenkins
         state: started
         enabled: true
