@@ -60,9 +60,13 @@
     #   ignore_errors: yes
 
     - name: Install docker with using the yum module itself 
+      yum:
+        name: docker
+        state: present
+      become: yes
+      ## TODO :: installing the docker with the yum repo , 
+      # i think that already i have java and jenkins up, only i need to figure out docker installation on this , 
     
-    
-
 
     - name: Start and enable Docker service
       systemd:
@@ -70,3 +74,4 @@
         state: started
         enabled: yes
       become: yes
+      ignore_errors: yes
